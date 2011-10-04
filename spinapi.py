@@ -1,6 +1,10 @@
 import ctypes
 import time
 from spinconfig import config
+import threading
+
+
+lock = threading.Semaphore()
 
 spinapi = ctypes.cdll.LoadLibrary(config['spinapi'])
 
@@ -56,7 +60,7 @@ def pb_status_message():
 def pb_read_status():
     spinapi.pb_read_status.restype = ctypes.c_uint32
     status = spinapi.pb_read_status()
-    print status
+    
     # convert to reversed binary string
     # convert to binary string, and remove 0b
     status = bin(status)[2:]
