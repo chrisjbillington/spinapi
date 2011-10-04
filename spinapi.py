@@ -52,7 +52,21 @@ def pb_status_message():
     spinapi.pb_status_message.restype = ctypes.c_char_p
     message = spinapi.pb_status_message()
     return message
+  
+def pb_read_status():
+    spinapi.pb_read_status.restype = ctypes.c_uint32
+    status = spinapi.pb_read_status()
+    print status
+    # convert to reversed binary string
+    # convert to binary string, and remove 0b
+    status = bin(status)[2:]
+    # reverse string
+    status = status[::-1]
+    # pad to make sure we have enough bits!
+    status = status + "0000"
     
+    return {"stopped":bool(int(status[0])),"reset":bool(int(status[1])),"running":bool(int(status[2])), "waiting":bool(int(status[3]))}
+  
 def pb_count_boards():
     spinapi.pb_count_boards.restype = ctypes.c_int
     result = spinapi.pb_count_boards()
