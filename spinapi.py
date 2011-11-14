@@ -196,6 +196,12 @@ def pb_close():
     spinapi.pb_close.restype = ctypes.c_int
     retcode = spinapi.pb_close()
     if retcode != 0: raise RuntimeError(pb_get_error())
+    
+def pb_reset():
+    spinapi.pb_reset.restype = ctypes.c_int
+    retcode = spinapi.pb_reset()
+    if retcode != 0: raise RuntimeError(pb_get_error())
+    
 
 def pb_write_default_flag(flags):
     spinapi.pb_write_register.restype = ctypes.c_int
