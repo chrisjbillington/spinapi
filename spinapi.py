@@ -6,7 +6,7 @@ import threading
 
 lock = threading.Semaphore()
 
-spinapi = ctypes.cdll.LoadLibrary(config['spinapi'])
+_spinapi = ctypes.cdll.LoadLibrary(config['spinapi'])
 
 # Defines for different pb_inst instruction types
 CONTINUE = 0
@@ -45,21 +45,21 @@ PHASE_RESET = 1
 NO_PHASE_RESET = 0
 
 def spinpts_get_version():
-    spinapi.spinpts_get_version.restype = ctypes.c_char_p
-    return spinapi.spinpts_get_version()
+    _spinapi.spinpts_get_version.restype = ctypes.c_char_p
+    return _spinapi.spinpts_get_version()
     
 def pb_get_error():
-    spinapi.pb_get_error.restype = ctypes.c_char_p
-    return spinapi.pb_get_error()
+    _spinapi.pb_get_error.restype = ctypes.c_char_p
+    return _spinapi.pb_get_error()
 
 def pb_status_message():
-    spinapi.pb_status_message.restype = ctypes.c_char_p
-    message = spinapi.pb_status_message()
+    _spinapi.pb_status_message.restype = ctypes.c_char_p
+    message = _spinapi.pb_status_message()
     return message
   
 def pb_read_status():
-    spinapi.pb_read_status.restype = ctypes.c_uint32
-    status = spinapi.pb_read_status()
+    _spinapi.pb_read_status.restype = ctypes.c_uint32
+    status = _spinapi.pb_read_status()
     
     # convert to reversed binary string
     # convert to binary string, and remove 0b
@@ -72,49 +72,49 @@ def pb_read_status():
     return {"stopped":bool(int(status[0])),"reset":bool(int(status[1])),"running":bool(int(status[2])), "waiting":bool(int(status[3]))}
   
 def pb_count_boards():
-    spinapi.pb_count_boards.restype = ctypes.c_int
-    result = spinapi.pb_count_boards()
+    _spinapi.pb_count_boards.restype = ctypes.c_int
+    result = _spinapi.pb_count_boards()
     if result == -1: raise RuntimeError(pb_get_error())  
     return result
 
 def pb_select_board(board_num):
-    spinapi.pb_select_board.restype = ctypes.c_int
-    retcode = spinapi.pb_select_board(ctypes.c_int(board_num))
+    _spinapi.pb_select_board.restype = ctypes.c_int
+    retcode = _spinapi.pb_select_board(ctypes.c_int(board_num))
     if retcode < 0: raise RuntimeError(pb_get_error())
                                
 def pb_init():
-    spinapi.pb_init.restype = ctypes.c_int
-    retcode = spinapi.pb_init()
+    _spinapi.pb_init.restype = ctypes.c_int
+    retcode = _spinapi.pb_init()
     if retcode != 0: raise RuntimeError(pb_get_error())
 
 def pb_core_clock(clock_freq):
-    spinapi.pb_core_clock.restype = ctypes.c_int
-    retcode = spinapi.pb_core_clock(ctypes.c_double(clock_freq))
+    _spinapi.pb_core_clock.restype = ctypes.c_int
+    retcode = _spinapi.pb_core_clock(ctypes.c_double(clock_freq))
     #if retcode != 0: raise RuntimeError(pb_get_error())
                        
 def pb_start_programming(device):
-    spinapi.pb_start_programming.restype = ctypes.c_int
-    retcode = spinapi.pb_start_programming(ctypes.c_int(device))
+    _spinapi.pb_start_programming.restype = ctypes.c_int
+    retcode = _spinapi.pb_start_programming(ctypes.c_int(device))
     if retcode != 0: raise RuntimeError(pb_get_error())
 
 def pb_select_dds(dds):
-    spinapi.pb_select_dds.restype = ctypes.c_int
-    result = spinapi.pb_select_dds(ctypes.c_int(dds))
+    _spinapi.pb_select_dds.restype = ctypes.c_int
+    result = _spinapi.pb_select_dds(ctypes.c_int(dds))
     if result < 0: raise RuntimeError(pb_get_error())
     
 def pb_set_phase(phase):
-    spinapi.pb_set_phase.restype = ctypes.c_int
-    result = spinapi.pb_set_phase(ctypes.c_double(phase))
+    _spinapi.pb_set_phase.restype = ctypes.c_int
+    result = _spinapi.pb_set_phase(ctypes.c_double(phase))
     if result < 0: raise RuntimeError(pb_get_error())
 
 def pb_set_freq(freq):
-    spinapi.pb_set_freq.restype = ctypes.c_int
-    result = spinapi.pb_set_freq(ctypes.c_double(freq))
+    _spinapi.pb_set_freq.restype = ctypes.c_int
+    result = _spinapi.pb_set_freq(ctypes.c_double(freq))
     if result < 0: raise RuntimeError(pb_get_error())
 
 def pb_set_amp(amp, register):
-    spinapi.pb_set_amp.restype = ctypes.c_int
-    result = spinapi.pb_set_amp(ctypes.c_float(amp),ctypes.c_int(register))
+    _spinapi.pb_set_amp.restype = ctypes.c_int
+    result = _spinapi.pb_set_amp(ctypes.c_float(amp),ctypes.c_int(register))
     if result < 0: raise RuntimeError(pb_get_error())
     
 def pb_inst(flags, inst, inst_data, length):
@@ -123,10 +123,10 @@ def pb_inst(flags, inst, inst_data, length):
        even though it's not actually in the API. It's modified here to take a 
        string of ones and zeros for the 'flags' argument, converting it to an 
        int for the C function call."""
-    spinapi.pb_inst_dds2.restype = ctypes.c_int
+    _spinapi.pb_inst_dds2.restype = ctypes.c_int
     z = ctypes.c_int(0)
     # [::-1] reverses any iterable. This is Python idiom...despite not being obvious at all.
-    result = spinapi.pb_inst_dds2(z,z,z,z,z,z,z,z,z,z, ctypes.c_int(int(flags[::-1],2)),
+    result = _spinapi.pb_inst_dds2(z,z,z,z,z,z,z,z,z,z, ctypes.c_int(int(flags[::-1],2)),
                                   ctypes.c_int(inst),ctypes.c_int(inst_data),ctypes.c_double(length))
     if result < 0: raise RuntimeError(pb_get_error())
     return result
@@ -136,10 +136,10 @@ def pb_inst_dds2(freq0,phase0,amp0,dds_en0,phase_reset0,
                  flags, inst, inst_data, length):
     """Gives a full instruction to the pulseblaster, with DDS included. The flags argument can be
        either an int representing the bitfield for the flag states, or a string of ones and zeros."""
-    spinapi.pb_inst_dds2.restype = ctypes.c_int
+    _spinapi.pb_inst_dds2.restype = ctypes.c_int
     if isinstance(flags, str):
         flags = int(flags[::-1],2)
-    result = spinapi.pb_inst_dds2(ctypes.c_int(freq0),ctypes.c_int(phase0),ctypes.c_int(amp0),
+    result = _spinapi.pb_inst_dds2(ctypes.c_int(freq0),ctypes.c_int(phase0),ctypes.c_int(amp0),
                                   ctypes.c_int(dds_en0),ctypes.c_int(phase_reset0),
                                   ctypes.c_int(freq1),ctypes.c_int(phase1),ctypes.c_int(amp1),
                                   ctypes.c_int(dds_en1),ctypes.c_int(phase_reset1),
@@ -178,37 +178,37 @@ def program_amp_regs(*amps):
         return tuple(range(len(amps)))
 
 def pb_stop_programming():
-    spinapi.pb_stop_programming.restype = ctypes.c_int
-    retcode = spinapi.pb_start_programming()
+    _spinapi.pb_stop_programming.restype = ctypes.c_int
+    retcode = _spinapi.pb_start_programming()
     if retcode != 0: raise RuntimeError(pb_get_error())
 
 def pb_start():
-    spinapi.pb_start.restype = ctypes.c_int
-    retcode = spinapi.pb_start()
+    _spinapi.pb_start.restype = ctypes.c_int
+    retcode = _spinapi.pb_start()
     if retcode != 0: raise RuntimeError(pb_get_error())
 
 def pb_stop():
-    spinapi.pb_stop.restype = ctypes.c_int
-    retcode = spinapi.pb_stop()
+    _spinapi.pb_stop.restype = ctypes.c_int
+    retcode = _spinapi.pb_stop()
     if retcode != 0: raise RuntimeError(pb_get_error())
                                                         
 def pb_close():
-    spinapi.pb_close.restype = ctypes.c_int
-    retcode = spinapi.pb_close()
+    _spinapi.pb_close.restype = ctypes.c_int
+    retcode = _spinapi.pb_close()
     if retcode != 0: raise RuntimeError(pb_get_error())
     
 def pb_reset():
-    spinapi.pb_reset.restype = ctypes.c_int
-    retcode = spinapi.pb_reset()
+    _spinapi.pb_reset.restype = ctypes.c_int
+    retcode = _spinapi.pb_reset()
     if retcode != 0: raise RuntimeError(pb_get_error())
     
 
 def pb_write_default_flag(flags):
-    spinapi.pb_write_register.restype = ctypes.c_int
+    _spinapi.pb_write_register.restype = ctypes.c_int
     if isinstance(flags, str):
         flags = int(flags[::-1],2)
 
-    spinapi.pb_write_register(ctypes.c_int(0x40000+0x08), ctypes.c_int(flags))
+    _spinapi.pb_write_register(ctypes.c_int(0x40000+0x08), ctypes.c_int(flags))
 
 def program_and_run(program):
     """This bit has nothing to do with the C API and is for programming the PulseBlaster
@@ -238,7 +238,7 @@ def program_and_run(program):
 
 if __name__ == '__main__':
 
-    # Use 'from spinapi import *' to import this module to another script in the same directory.
+    # Use 'from _spinapi import *' to import this module to another script in the same directory.
     # Then you can define your program like so:
     
     def program():
