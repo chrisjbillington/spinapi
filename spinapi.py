@@ -3,9 +3,6 @@ import time
 from spinconfig import config
 import threading
 
-
-lock = threading.Semaphore()
-
 _spinapi = ctypes.cdll.LoadLibrary(config['spinapi'])
 
 # Defines for different pb_inst instruction types
