@@ -44,6 +44,11 @@ NO_PHASE_RESET = 0
 def spinpts_get_version():
     _spinapi.spinpts_get_version.restype = ctypes.c_char_p
     return _spinapi.spinpts_get_version()
+
+def pb_get_firmware_id():
+    _spinapi.pb_get_firmware_id.restype = ctypes.c_uint
+    return _spinapi.pb_get_firmware_id()
+  
     
 def pb_get_error():
     _spinapi.pb_get_error.restype = ctypes.c_char_p
