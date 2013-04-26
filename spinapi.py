@@ -137,7 +137,18 @@ def pb_inst_dds2(freq0,phase0,amp0,dds_en0,phase_reset0,
                  freq1,phase1,amp1,dds_en1,phase_reset1,
                  flags, inst, inst_data, length):
     """Gives a full instruction to the pulseblaster, with DDS included. The flags argument can be
-       either an int representing the bitfield for the flag states, or a string of ones and zeros."""
+       either an int representing the bitfield for the flag states, or a string of ones and zeros.
+       Note that if passing in a string for the flag states, the first character represents flag 0.
+       Eg.
+       If it is a string: 
+            flag: 0          12
+                 '101100011111'
+       
+       If it is a binary number (or integer:
+            flag:12          0
+                0b111110001101
+                3981    <---- integer representation
+       """
     _spinapi.pb_inst_dds2.restype = ctypes.c_int
     if isinstance(flags, str):
         flags = int(flags[::-1],2)
