@@ -1,7 +1,20 @@
+#####################################################################
+#                                                                   #
+# spinapi.py                                                        #
+#                                                                   #
+# Copyright 2013, Christopher Billington, Philip Starkey            #
+#                                                                   #
+# This file is part of the spinapi project                          #
+# (see https://bitbucket.org/cbillington/spinapi )                  #
+# and is licensed under the Simplified BSD License.                 #
+# See the LICENSE.txt file in the root of the project               #
+# for the full license.                                             #
+#                                                                   #
+#####################################################################
+
 import ctypes
 import time
 from spinconfig import config
-import threading
 
 _spinapi = ctypes.cdll.LoadLibrary(config['spinapi'])
 
