@@ -9,5 +9,6 @@ setup(name='spinapi',
       author_email='chrisjbillington@gmail.com',
       url='https://bitbucket.org/cbillington/spinapi/',
       license="BSD",
-      packages=['spinapi']
+      packages=['spinapi'],
+      package_data={'spinapi': ['LICENSE.txt', 'README.md']}
      )
