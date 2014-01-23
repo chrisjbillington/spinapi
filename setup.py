@@ -11,7 +11,7 @@
 from distutils.core import setup
 
 setup(name='spinapi',
-      version='1.0.1',
+      version='1.0.2',
       description='Python wrapper around the Spincore PulseBlaster API using ctypes.',
       author='Chris Billington',
       author_email='chrisjbillington@gmail.com',
