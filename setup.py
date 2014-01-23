@@ -9,9 +9,16 @@
 # python setup.py register
 
 from distutils.core import setup
+import os
 
+VERSION = '1.0.3'
+
+# Auto generate a __version__ package for the package to import
+with open(os.path.join('spinapi', '__version__.py'), 'w') as f:
+    f.write("__version__ = '%s'\n"%VERSION)
+    
 setup(name='spinapi',
-      version='1.0.2',
+      version=VERSION,
       description='Python wrapper around the Spincore PulseBlaster API using ctypes.',
       author='Chris Billington',
       author_email='chrisjbillington@gmail.com',
