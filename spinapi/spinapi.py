@@ -148,22 +148,17 @@ def pb_set_amp(amp, register):
     _spinapi.pb_set_amp.restype = ctypes.c_int
     result = _spinapi.pb_set_amp(ctypes.c_float(amp),ctypes.c_int(register))
     if result < 0: raise RuntimeError(pb_get_error())
-    
-def pb_inst(flags, inst, inst_data, length):
-    """This is a convenience function, with all the analogue stuff set to zero.
-       Some of the documentation refers to a function with this name and syntax,
-       even though it's not actually in the API. It's modified here to take a 
-       string of ones and zeros for the 'flags' argument, converting it to an 
-       int for the C function call."""
+
+def pb_inst_pbonly(flags, inst, inst_data, length):
     _checkloaded()
-    _spinapi.pb_inst_dds2.restype = ctypes.c_int
-    z = ctypes.c_int(0)
-    # [::-1] reverses any iterable. This is Python idiom...despite not being obvious at all.
-    result = _spinapi.pb_inst_dds2(z,z,z,z,z,z,z,z,z,z, ctypes.c_int(int(flags[::-1],2)),
-                                  ctypes.c_int(inst),ctypes.c_int(inst_data),ctypes.c_double(length))
+    _spinapi.pb_inst_pbonly.restype = ctypes.c_int
+    if isinstance(flags, str):
+        flags = int(flags[::-1],2)
+    result = _spinapi.pb_inst_pbonly(ctypes.c_int(flags), ctypes.c_int(inst),
+                                     ctypes.c_int(inst_data),ctypes.c_double(length))
     if result < 0: raise RuntimeError(pb_get_error())
     return result
-
+    
 def pb_inst_dds2(freq0,phase0,amp0,dds_en0,phase_reset0,
                  freq1,phase1,amp1,dds_en1,phase_reset1,
                  flags, inst, inst_data, length):
@@ -252,7 +247,6 @@ def pb_reset():
     retcode = _spinapi.pb_reset()
     if retcode != 0: raise RuntimeError(pb_get_error())
     
-
 def pb_write_default_flag(flags):
     _checkloaded()
     _spinapi.pb_write_register.restype = ctypes.c_int
@@ -260,45 +254,6 @@ def pb_write_default_flag(flags):
         flags = int(flags[::-1],2)
 
     _spinapi.pb_write_register(ctypes.c_int(0x40000+0x08), ctypes.c_int(flags))
-
-def program_and_run(program):
-    """This bit has nothing to do with the C API and is for programming the PulseBlaster
-    with a Python script that imports this one. See the if __name__ == '__main__' block below
-    for an example."""
-    print 'Spincore API version', spinpts_get_version()
-    print 'Initialising board...',
-    pb_init()
-    pb_core_clock(75)
-    print 'done.'
-    print 'Programming board...',
-    program()
-    print 'done.'
-    print 'Starting program...',
-    pb_start()
-    print 'press Ctrl-C to stop.'
-    print pb_status_message().replace('\n','')
-    try:
-        while pb_status_message() == 'Board is running.\n':
-            time.sleep(0.5)
-        print pb_status_message().replace('\n','')
-    except KeyboardInterrupt:
-        print 'Stopping board ...',
-    pb_stop()
-    pb_close()
-    print 'done.'
-
-if __name__ == '__main__':
-
-    # Use 'from _spinapi import *' to import this module to another script in the same directory.
-    # Then you can define your program like so:
-    
-    def program():
-        pb_start_programming(PULSE_PROGRAM)
-        start = pb_inst(    '111111111111',    CONTINUE,      0,    100.0*us    )
-        _     = pb_inst(    '000000000000',    BRANCH,    start,    100.0*us    )
-        pb_stop_programming()
-    # And run it thusly:
-    program_and_run(program)
 
 
 
