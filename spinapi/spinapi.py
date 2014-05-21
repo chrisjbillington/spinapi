@@ -12,16 +12,27 @@
 #                                                                   #
 #####################################################################
 
+import os
+import sys
+import platform
 import ctypes
 import time
-from spinconfig import config
 
+lib_dir = os.path.abspath(os.path.dirname(__file__))
 def _checkloaded():
     global _spinapi
     try:    
         _spinapi
     except NameError:
-        _spinapi = ctypes.cdll.LoadLibrary(config['spinapi'])
+        arch = platform.architecture()
+        if arch == ('32bit', 'WindowsPE'):
+            libname = 'spinapi.dll'
+        elif arch == ('64bit', 'WindowsPE'):
+            libname = 'spinapi64.dll'
+        else:
+            raise NotImplementedError("No Unix support yet - help me work out how to build a shared object from the Spincore API source and then it will be done.")
+        libpath = os.path.join(lib_dir, libname)
+        _spinapi = ctypes.cdll.LoadLibrary(libpath)
         
 # Defines for different pb_inst instruction types
 CONTINUE = 0
