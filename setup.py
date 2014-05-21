@@ -11,13 +11,11 @@
 from distutils.core import setup
 import os
 
-VERSION = '2.0.1'
-SPINAPI_VERSION = '20140515'
+VERSION = '3.0.0'
 
 # Auto generate a __version__ package for the package to import
 with open(os.path.join('spinapi', '__version__.py'), 'w') as f:
     f.write("__version__ = '%s'\n"%VERSION)
-    f.write("__spinapi_version__ = '%s'\n"%SPINAPI_VERSION)
     
 setup(name='spinapi',
       version=VERSION,
@@ -27,5 +25,4 @@ setup(name='spinapi',
       url='https://bitbucket.org/cbillington/spinapi/',
       license="BSD",
       packages=['spinapi'],
-      package_data={'spinapi': ['*.dll']}
      )
