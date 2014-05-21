@@ -11,7 +11,7 @@
 from distutils.core import setup
 import os
 
-VERSION = '2.0.0'
+VERSION = '2.0.1'
 SPINAPI_VERSION = '20140515'
 
 # Auto generate a __version__ package for the package to import
@@ -26,5 +26,6 @@ setup(name='spinapi',
       author_email='chrisjbillington@gmail.com',
       url='https://bitbucket.org/cbillington/spinapi/',
       license="BSD",
-      packages=['spinapi']
+      packages=['spinapi'],
+      package_data={'spinapi': ['*.dll']}
      )
