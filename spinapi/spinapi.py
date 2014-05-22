@@ -18,6 +18,10 @@ import platform
 import ctypes
 import time
 
+# Whether or not to tell the spincore library to write debug logfiles.
+# User can set to False before calling any spinapi functions to disable debugging.
+debug = True
+
 def _checkloaded():
     global _spinapi
     try:    
@@ -31,10 +35,10 @@ def _checkloaded():
         else:
             raise NotImplementedError("No Unix support yet - testing this would require building shared objects from the spincore API on linux, and I don't know how to do this.")
         _spinapi = ctypes.cdll.LoadLibrary(libname)
-        # enable debugging by default:
-        pb_set_debug(1)
+        # enable debugging if it's switched on by the module global:
+        pb_set_debug(debug)
 
-# Defines for different pb_inst instruction types
+# Defines for different pb_instr instruction types
 CONTINUE = 0
 STOP = 1
 LOOP = 2
