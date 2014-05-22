@@ -229,7 +229,7 @@ def program_amp_regs(*amps):
 def pb_stop_programming():
     _checkloaded()
     _spinapi.pb_stop_programming.restype = ctypes.c_int
-    retcode = _spinapi.pb_start_programming()
+    retcode = _spinapi.pb_stop_programming()
     if retcode != 0: raise RuntimeError(pb_get_error())
 
 def pb_start():
