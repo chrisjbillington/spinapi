@@ -11,7 +11,7 @@
 from distutils.core import setup
 import os
 
-VERSION = '3.0.3'
+VERSION = '3.0.4'
 
 # Auto generate a __version__ package for the package to import
 with open(os.path.join('spinapi', '__version__.py'), 'w') as f:

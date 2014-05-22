@@ -134,10 +134,8 @@ def pb_init():
     
 def pb_core_clock(clock_freq):
     _checkloaded()
-    _spinapi.pb_core_clock.restype = ctypes.c_int
-    result = _spinapi.pb_core_clock(ctypes.c_double(clock_freq))
-    if result != 0: raise RuntimeError(pb_get_error())
-    return result
+    _spinapi.pb_core_clock.restype = ctypes.c_void_p
+    _spinapi.pb_core_clock(ctypes.c_double(clock_freq)) # returns void, so ignore return value.
                 
 def pb_start_programming(device):
     _checkloaded()
