@@ -31,7 +31,9 @@ def _checkloaded():
         else:
             raise NotImplementedError("No Unix support yet - testing this would require building shared objects from the spincore API on linux, and I don't know how to do this.")
         _spinapi = ctypes.cdll.LoadLibrary(libname)
-        
+        # enable debugging by default:
+        pb_set_debug(1)
+
 # Defines for different pb_inst instruction types
 CONTINUE = 0
 STOP = 1
@@ -78,6 +80,11 @@ def pb_get_firmware_id():
     _spinapi.pb_get_firmware_id.restype = ctypes.c_uint
     return _spinapi.pb_get_firmware_id()
     
+def pb_set_debug(debug):
+    _checkloaded()
+    _spinapi.pb_set_debug.restype = ctypes.c_int
+    return _spinapi.pb_set_debug(ctypes.c_int(debug))
+    
 def pb_get_error():
     _checkloaded()
     _spinapi.pb_get_error.restype = ctypes.c_char_p
@@ -114,56 +121,64 @@ def pb_count_boards():
 def pb_select_board(board_num):
     _checkloaded()
     _spinapi.pb_select_board.restype = ctypes.c_int
-    retcode = _spinapi.pb_select_board(ctypes.c_int(board_num))
-    if retcode < 0: raise RuntimeError(pb_get_error())
+    result = _spinapi.pb_select_board(ctypes.c_int(board_num))
+    if result < 0: raise RuntimeError(pb_get_error())
+    return result
                                
 def pb_init():
     _checkloaded()
     _spinapi.pb_init.restype = ctypes.c_int
-    retcode = _spinapi.pb_init()
-    if retcode != 0: raise RuntimeError(pb_get_error())
-
+    result = _spinapi.pb_init()
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
+    
 def pb_core_clock(clock_freq):
     _checkloaded()
     _spinapi.pb_core_clock.restype = ctypes.c_int
-    retcode = _spinapi.pb_core_clock(ctypes.c_double(clock_freq))
-    #if retcode != 0: raise RuntimeError(pb_get_error())
-                       
+    result = _spinapi.pb_core_clock(ctypes.c_double(clock_freq))
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
+                
 def pb_start_programming(device):
     _checkloaded()
     _spinapi.pb_start_programming.restype = ctypes.c_int
-    retcode = _spinapi.pb_start_programming(ctypes.c_int(device))
-    if retcode != 0: raise RuntimeError(pb_get_error())
-
+    result = _spinapi.pb_start_programming(ctypes.c_int(device))
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
+    
 def pb_select_dds(dds):
     _checkloaded()
     _spinapi.pb_select_dds.restype = ctypes.c_int
     result = _spinapi.pb_select_dds(ctypes.c_int(dds))
     if result < 0: raise RuntimeError(pb_get_error())
+    return result
     
 def pb_set_phase(phase):
     _spinapi.pb_set_phase.restype = ctypes.c_int
     result = _spinapi.pb_set_phase(ctypes.c_double(phase))
     if result < 0: raise RuntimeError(pb_get_error())
+    return result
 
 def pb_set_freq(freq):
     _checkloaded()
     _spinapi.pb_set_freq.restype = ctypes.c_int
     result = _spinapi.pb_set_freq(ctypes.c_double(freq))
     if result < 0: raise RuntimeError(pb_get_error())
+    return result
 
 def pb_set_amp(amp, register):
     _checkloaded()
     _spinapi.pb_set_amp.restype = ctypes.c_int
     result = _spinapi.pb_set_amp(ctypes.c_float(amp),ctypes.c_int(register))
     if result < 0: raise RuntimeError(pb_get_error())
+    return result
 
 def pb_inst_pbonly(flags, inst, inst_data, length):
     _checkloaded()
     _spinapi.pb_inst_pbonly.restype = ctypes.c_int
     if isinstance(flags, str):
         flags = int(flags[::-1],2)
-    result = _spinapi.pb_inst_pbonly(ctypes.c_int(flags), ctypes.c_int(inst),
+    result = _spinapi.pb_inst_pbonly(ctypes.c_uint32(flags), ctypes.c_int(inst),
                                      ctypes.c_int(inst_data),ctypes.c_double(length))
     if result < 0: raise RuntimeError(pb_get_error())
     return result
@@ -229,48 +244,44 @@ def program_amp_regs(*amps):
 def pb_stop_programming():
     _checkloaded()
     _spinapi.pb_stop_programming.restype = ctypes.c_int
-    retcode = _spinapi.pb_stop_programming()
-    if retcode != 0: raise RuntimeError(pb_get_error())
-
+    result = _spinapi.pb_stop_programming()
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
+    
 def pb_start():
     _checkloaded()
     _spinapi.pb_start.restype = ctypes.c_int
-    retcode = _spinapi.pb_start()
-    if retcode != 0: raise RuntimeError(pb_get_error())
-
+    result = _spinapi.pb_start()
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
+    
 def pb_stop():
     _checkloaded()
     _spinapi.pb_stop.restype = ctypes.c_int
-    retcode = _spinapi.pb_stop()
-    if retcode != 0: raise RuntimeError(pb_get_error())
-                                                        
+    result = _spinapi.pb_stop()
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
+            
 def pb_close():
     _checkloaded()
     _spinapi.pb_close.restype = ctypes.c_int
-    retcode = _spinapi.pb_close()
-    if retcode != 0: raise RuntimeError(pb_get_error())
+    result = _spinapi.pb_close()
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
     
 def pb_reset():
     _checkloaded()
     _spinapi.pb_reset.restype = ctypes.c_int
-    retcode = _spinapi.pb_reset()
-    if retcode != 0: raise RuntimeError(pb_get_error())
+    result = _spinapi.pb_reset()
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
     
 def pb_write_default_flag(flags):
     _checkloaded()
     _spinapi.pb_write_register.restype = ctypes.c_int
     if isinstance(flags, str):
         flags = int(flags[::-1],2)
+    result = _spinapi.pb_write_register(ctypes.c_int(0x40000+0x08), ctypes.c_int(flags))
+    if result != 0: raise RuntimeError(pb_get_error())
+    return result
 
-    _spinapi.pb_write_register(ctypes.c_int(0x40000+0x08), ctypes.c_int(flags))
-
-
-
-
-
-
-
-
-
-
-    
