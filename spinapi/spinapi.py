@@ -32,8 +32,11 @@ def _checkloaded():
             libname = 'spinapi.dll'
         elif arch == ('64bit', 'WindowsPE'):
             libname = 'spinapi64.dll'
-        else:
-            raise NotImplementedError("No Unix support yet - testing this would require building shared objects from the spincore API on linux, and I don't know how to do this.")
+        elif arch == ('32bit', 'ELF'):
+            libname = 'libspinapi.so'
+        elif arch == ('64bit', 'ELF'):
+            libname = 'libspinapi64.so'
+
         _spinapi = ctypes.cdll.LoadLibrary(libname)
         # enable debugging if it's switched on by the module global:
         pb_set_debug(debug)
