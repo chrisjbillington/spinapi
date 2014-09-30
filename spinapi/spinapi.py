@@ -20,8 +20,9 @@ import time
 
 # Whether or not to tell the spincore library to write debug logfiles.
 # User can set to False before calling any spinapi functions to disable debugging.
-debug = True
+debug = False
 
+this_folder = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
 def _checkloaded():
     global _spinapi
     try:    
@@ -33,9 +34,9 @@ def _checkloaded():
         elif arch == ('64bit', 'WindowsPE'):
             libname = 'spinapi64.dll'
         elif arch == ('32bit', 'ELF'):
-            libname = 'libspinapi.so'
+            libname = os.path.join(this_folder, 'libspinapi.so')
         elif arch == ('64bit', 'ELF'):
-            libname = 'libspinapi64.so'
+            libname = os.path.join(this_folder, 'libspinapi64.so')
 
         _spinapi = ctypes.cdll.LoadLibrary(libname)
         # enable debugging if it's switched on by the module global:
