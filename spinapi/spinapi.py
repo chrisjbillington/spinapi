@@ -219,21 +219,25 @@ def pb_inst_dds2(freq0,phase0,amp0,dds_en0,phase_reset0,
     return result
 
 # More convenience functions:
-def program_freq_regs(*freqs):
+def program_freq_regs(*freqs, **kwargs):
+    call_stop_programming = kwargs.pop('call_stop_programming', True)
     pb_start_programming(FREQ_REGS)
     for freq in freqs:
         pb_set_freq(freq)
-    pb_stop_programming()
+    if call_stop_programming:
+        pb_stop_programming()
     if len(freqs) == 1:
         return 0
     else:
         return tuple(range(len(freqs)))
 
-def program_phase_regs(*phases):
+def program_phase_regs(*phases, **kwargs):
+    call_stop_programming = kwargs.pop('call_stop_programming', True)
     pb_start_programming(PHASE_REGS)
     for phase in phases:
         pb_set_phase(phase)
-    pb_stop_programming()
+    if call_stop_programming:
+        pb_stop_programming()
     if len(phases) == 1:
         return 0
     else:
