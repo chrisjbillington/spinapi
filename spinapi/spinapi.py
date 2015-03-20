@@ -92,7 +92,12 @@ def pb_set_debug(debug):
     _checkloaded()
     _spinapi.pb_set_debug.restype = ctypes.c_int
     return _spinapi.pb_set_debug(ctypes.c_int(debug))
-    
+
+def pb_get_version():
+    _checkloaded()
+    _spinapi.pb_get_version.restype = ctypes.c_char_p
+    return _spinapi.pb_get_version()
+
 def pb_get_error():
     _checkloaded()
     _spinapi.pb_get_error.restype = ctypes.c_char_p
