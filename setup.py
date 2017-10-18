@@ -12,7 +12,7 @@ from distutils.core import setup
 import os
 import platform
 
-VERSION = '3.1.2'
+VERSION = '3.2.0'
 
 # Auto generate a __version__ package for the package to import
 with open(os.path.join('spinapi', '__version__.py'), 'w') as f:

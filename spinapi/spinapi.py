@@ -17,8 +17,7 @@ import sys
 import platform
 import ctypes
 import time
-import six
-if six.PY2:
+if sys.version_info[0] == 2:
     str = unicode
 
 # Whether or not to tell the spincore library to write debug logfiles.
