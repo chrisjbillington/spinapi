@@ -17,6 +17,9 @@ import sys
 import platform
 import ctypes
 import time
+import six
+if six.PY2:
+    str = unicode
 
 # Whether or not to tell the spincore library to write debug logfiles.
 # User can set to False before calling any spinapi functions to disable debugging.
@@ -187,7 +190,7 @@ def pb_set_amp(amp, register):
 def pb_inst_pbonly(flags, inst, inst_data, length):
     _checkloaded()
     _spinapi.pb_inst_pbonly.restype = ctypes.c_int
-    if isinstance(flags, str):
+    if isinstance(flags, str) or isinstance(flags, bytes):
         flags = int(flags[::-1],2)
     result = _spinapi.pb_inst_pbonly(ctypes.c_uint32(flags), ctypes.c_int(inst),
                                      ctypes.c_int(inst_data),ctypes.c_double(length))
@@ -212,7 +215,7 @@ def pb_inst_dds2(freq0,phase0,amp0,dds_en0,phase_reset0,
        """
     _checkloaded()
     _spinapi.pb_inst_dds2.restype = ctypes.c_int
-    if isinstance(flags, str):
+    if isinstance(flags, str) or isinstance(flags, bytes):
         flags = int(flags[::-1],2)
     result = _spinapi.pb_inst_dds2(ctypes.c_int(freq0),ctypes.c_int(phase0),ctypes.c_int(amp0),
                                   ctypes.c_int(dds_en0),ctypes.c_int(phase_reset0),
@@ -294,7 +297,7 @@ def pb_reset():
 def pb_write_default_flag(flags):
     _checkloaded()
     _spinapi.pb_write_register.restype = ctypes.c_int
-    if isinstance(flags, str):
+    if isinstance(flags, str) or isinstance(flags, bytes):
         flags = int(flags[::-1],2)
     result = _spinapi.pb_write_register(ctypes.c_int(0x40000+0x08), ctypes.c_int(flags))
     if result != 0: raise RuntimeError(pb_get_error())
