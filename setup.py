@@ -1,18 +1,8 @@
-#!/usr/bin/env python
-
-# To upload a version to PyPI, run:
-#
-#    python setup.py sdist upload
-#
-# If the package is not registered with PyPI yet, do so with:
-#
-# python setup.py register
-
-from distutils.core import setup
+from setuptools import setup
 import os
 import platform
 
-VERSION = '3.2.0'
+VERSION = '3.2.1'
 
 # Auto generate a __version__ package for the package to import
 with open(os.path.join('spinapi', '__version__.py'), 'w') as f:
