@@ -1,0 +1,3 @@
+dist/
+*.egg-info
+spinapi/__version__.py

@@ -10,12 +10,7 @@ with open(os.path.join('spinapi', '__version__.py'), 'w') as f:
 
 arch = platform.architecture()
 
-if arch == ('32bit', 'ELF'):
-    bundled_shared_objects = ['libspinapi.so']
-elif arch == ('64bit', 'ELF'):
-    bundled_shared_objects = ['libspinapi64.so']
-else:
-    bundled_shared_objects = []
+bundled_shared_objects = ['libspinapi.so', 'libspinapi64.so']
     
 setup(name='spinapi',
       version=VERSION,
