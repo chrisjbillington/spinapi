@@ -168,6 +168,7 @@ def pb_select_dds(dds):
     return result
     
 def pb_set_phase(phase):
+    _checkloaded()
     _spinapi.pb_set_phase.restype = ctypes.c_int
     result = _spinapi.pb_set_phase(ctypes.c_double(phase))
     if result < 0: raise RuntimeError(pb_get_error())
