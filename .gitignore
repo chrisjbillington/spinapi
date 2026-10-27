@@ -1,3 +1,7 @@
+.coverage*
+__pycache__/
 dist/
-*.egg-info
-spinapi/__version__.py
+*.egg-info/
+build/*
+conda_build/*
+conda_packages/*

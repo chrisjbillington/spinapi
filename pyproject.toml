@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm>=10"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+version_scheme = "semver-pep440-release-branch"
+local_scheme = "no-local-version"
+
+[tool.setuptools.packages]
+find = {namespaces = false}
+
+[project]
+name = "spinapi"
+description = "Python wrapper around the SpinCore PulseBlaster API using ctypes"
+authors = [
+    {name = "Christopher Billington", email = "chrisjbillington@gmail.com"},
+]
+keywords = ["SpinCore", "PulseBlaster", "SpinAPI"]
+license = "BSD-2-Clause"
+license-files = ["LICENSE.txt"]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "setuptools_scm>=10",
+]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/chrisjbillington/spinapi"
+Documentation = "https://github.com/chrisjbillington/spinapi"
+Repository = "https://github.com/chrisjbillington/spinapi"
+Downloads = "https://pypi.org/project/spinapi/"
+Tracker = "https://github.com/chrisjbillington/spinapi/issues"

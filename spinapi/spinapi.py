@@ -5,7 +5,7 @@
 # Copyright 2013, Christopher Billington, Philip Starkey            #
 #                                                                   #
 # This file is part of the spinapi project                          #
-# (see https://bitbucket.org/cbillington/spinapi )                  #
+# (see https://github.com/chrisjbillington/spinapi)                 #
 # and is licensed under the Simplified BSD License.                 #
 # See the LICENSE.txt file in the root of the project               #
 # for the full license.                                             #
@@ -16,31 +16,32 @@ import os
 import sys
 import platform
 import ctypes
-import time
-if sys.version_info[0] == 2:
-    str = unicode
 
 # Whether or not to tell the spincore library to write debug logfiles.
 # User can set to False before calling any spinapi functions to disable debugging.
 debug = False
 
 this_folder = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
+
+def _library_path():
+    is_64bit = sys.maxsize > 2**32
+    machine = platform.machine()
+    if sys.platform == 'win32' and machine in ('AMD64', 'x86'):
+        return 'spinapi64.dll' if is_64bit else 'spinapi.dll'
+    if sys.platform.startswith('linux') and machine in ('x86_64', 'i386', 'i686'):
+        libname = 'libspinapi64.so' if is_64bit else 'libspinapi.so'
+        return os.path.join(this_folder, libname)
+    raise RuntimeError(
+        f"spinapi does not support {sys.platform} on {machine}. "
+        "It supports Windows and Linux on x86 and x86-64."
+    )
+
 def _checkloaded():
     global _spinapi
     try:    
         _spinapi
     except NameError:
-        arch = platform.architecture()
-        if arch == ('32bit', 'WindowsPE'):
-            libname = 'spinapi.dll'
-        elif arch == ('64bit', 'WindowsPE'):
-            libname = 'spinapi64.dll'
-        elif arch == ('32bit', 'ELF'):
-            libname = os.path.join(this_folder, 'libspinapi.so')
-        elif arch == ('64bit', 'ELF'):
-            libname = os.path.join(this_folder, 'libspinapi64.so')
-
-        _spinapi = ctypes.cdll.LoadLibrary(libname)
+        _spinapi = ctypes.cdll.LoadLibrary(_library_path())
         # enable debugging if it's switched on by the module global:
         pb_set_debug(debug)
 
@@ -167,6 +168,7 @@ def pb_select_dds(dds):
     return result
     
 def pb_set_phase(phase):
+    _checkloaded()
     _spinapi.pb_set_phase.restype = ctypes.c_int
     result = _spinapi.pb_set_phase(ctypes.c_double(phase))
     if result < 0: raise RuntimeError(pb_get_error())
