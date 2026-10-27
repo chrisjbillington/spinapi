@@ -1,12 +1,32 @@
 # spinapi
 
-Python wrapper around the Spincore PulseBlaster API using ctypes.
-( 
-[view on pypi](https://pypi.python.org/pypi/spinapi/);
-[view on Bitbucket](https://bitbucket.org/cbillington/spinapi)
+Python wrapper around the SpinCore PulseBlaster API using ctypes.
+
+(
+[view on PyPI](https://pypi.org/project/spinapi/);
+[view on GitHub](https://github.com/chrisjbillington/spinapi)
 )
 
-   * Install `python setup.py install`.
-   * If using Windows, this package assumes that the spincore API is installed on your system.
-   * If using unix, the spincore API shared object is bundled.
-   * For Windows, you should install whichever spincore API has the same bit count - 32 or 64 - for your operating system, not your python installation. If you use 32 bit Python but 64 bit windows, you should still install the 64 bit spincore API. It provides 32 bit dlls as well, which this wrapper will use in that case. Installing the 64 bit spincore API ensures you have the correct USB device drivers Windows will require to talk to the PulseBlaster.
+## Installation
+
+```
+pip install spinapi
+```
+
+or
+
+```
+conda install -c labscript-suite spinapi
+```
+
+spinapi supports Windows and Linux on x86 and x86-64.
+
+On Windows, spinapi loads `spinapi64.dll` (64-bit Python) or `spinapi.dll` (32-bit
+Python) from the system directories. Install
+[SpinAPI from SpinCore](https://www.spincore.com/support/spinapi/), which puts the
+library there and installs the USB drivers for the PulseBlaster. Install the SpinAPI
+build with the same bit count as Windows, not as Python: the 64-bit SpinAPI also
+provides the 32-bit library.
+
+On Linux, the SpinCore library is bundled with spinapi. It requires libusb-0.1, which
+most distributions provide in a package named `libusb-compat` or `libusb-0.1-4`.

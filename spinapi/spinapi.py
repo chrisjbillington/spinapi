@@ -5,7 +5,7 @@
 # Copyright 2013, Christopher Billington, Philip Starkey            #
 #                                                                   #
 # This file is part of the spinapi project                          #
-# (see https://bitbucket.org/cbillington/spinapi )                  #
+# (see https://github.com/chrisjbillington/spinapi)                 #
 # and is licensed under the Simplified BSD License.                 #
 # See the LICENSE.txt file in the root of the project               #
 # for the full license.                                             #
